@@ -1,15 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  AfterContentInit,
+  ContentChildren,
+  QueryList,
+} from '@angular/core';
+import { TabComponent } from '../tab/tab.component';
 
 @Component({
   selector: 'app-tabs-container',
   templateUrl: './tabs-container.component.html',
-  styleUrls: ['./tabs-container.component.css']
+  styleUrls: ['./tabs-container.component.css'],
 })
-export class TabsContainerComponent implements OnInit {
+export class TabsContainerComponent implements AfterContentInit {
+  constructor() {}
 
-  constructor() { }
+  ngAfterContentInit(): void {
+    const activeTabs = this.tabs?.filter((tab) => tab.active);
 
-  ngOnInit(): void {
+    if (!activeTabs || activeTabs.length === 0) {
+      this.selectTab(this.tabs!.first);
+    }
   }
 
+  selectTab(tab: TabComponent) {
+    this.tabs?.forEach((tab) => {
+      tab.active = false;
+    });
+
+    tab.active = true;
+
+    return false;
+  }
+
+  @ContentChildren(TabComponent) tabs?: QueryList<TabComponent>;
 }
